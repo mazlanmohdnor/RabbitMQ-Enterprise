@@ -43,22 +43,28 @@ $faker = Faker\Factory::create();
 
 
 //set how many record want 
-$limit = 1000;
+$limit = 100;
 $itteration = 0;
 
 while ($itteration < $limit) {
 
-    $name = $faker->name;
+    // $name = $faker->name;
 
-    // $messageBody = json_encode([
-    //     'name' => $faker->name,
-    //     'email' => $faker->email,
-    // ]);
+    $messageBody = json_encode([
+        'name' => $faker->lastname,
+        'email' => $faker->email,
+        'city' => $faker->city,
+        'website' => $faker->domainName,
+        'avatar' => $faker->imageUrl($width = 50, $height = 50, 'people')
+    ]);
     
-    $message = new AMQPMessage($name);
+    $message = new AMQPMessage($messageBody,[
+        'content_type' => 'application/json',
+        'delivery_mode' => AMQPMessage::DELIVERY_MODE_NON_PERSISTENT
+    ]);
     $channel->basic_publish($message, $exchange);
-
-    echo 'Publishing message to queue: ' . $name . PHP_EOL;
+    $body = json_decode($messageBody);
+    echo 'Publishing message to queue: ' . $body->name . PHP_EOL;
     
     $itteration++;
 }

@@ -40,13 +40,16 @@ function process_message($message)
      }
      //db end
  
-     // $messageBody = json_decode($message->body);
-     $name = $message->body;
-     // $email = $messageBody->email;
-     // $address = $messageBody->address;
+     $messageBody = json_decode($message->body);
+    //  $name = $message->body;
+     $name = $messageBody->name;
+     $email = $messageBody->email;
+     $city = $messageBody->city;
+     $website = $messageBody->website;
+     $avatar = $messageBody->avatar;
  
-     $sql = "INSERT INTO employee (name)
-     VALUES ('$name')";
+     $sql = "INSERT INTO employee (name,email,city,website,avatar)
+     VALUES ('$name','$email','$city','$website','$avatar')";
  
  
      if ($conn->query($sql) === TRUE) {
