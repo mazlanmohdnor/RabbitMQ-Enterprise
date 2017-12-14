@@ -1,5 +1,6 @@
 <?php
 require dirname(__DIR__) . '/vendor/autoload.php';
+include_once '../dashboard/pages/conn/conn.php';
 
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 
@@ -26,38 +27,24 @@ $channel->queue_bind($queue, $exchange);
 //process the message from MQ
 function process_message($message)
 {
-     //db conn
-    //  $servername = "localhost";
-    //  $username = "root";
-    //  $password = "";
-    //  $dbname = "enterprisemq";
- 
-     // Create connection
-    //  $conn = new mysqli($servername, $username, $password, $dbname);
-     // Check connection
-    //  if ($conn->connect_error) {
-    //      die("Connection failed: " . $conn->connect_error);
-    //  }
-     //db end
  
      $messageBody = json_decode($message->body);
-    //  $name = $message->body;
      $name = $messageBody->name;
      $email = $messageBody->email;
      $city = $messageBody->city;
      $website = $messageBody->website;
      $avatar = $messageBody->avatar;
  
-    //  $sql = "INSERT INTO employee (name,email,city,website,avatar)
-    //  VALUES ('$name','$email','$city','$website','$avatar')";
+     $sql = "INSERT INTO employee (name,email,city,website,avatar)
+     VALUES ('$name','$email','$city','$website','$avatar')";
  
  
-    //  if ($conn->query($sql) === TRUE) {
-    //      echo "New record created successfully". PHP_EOL;
-    //  } else {
-    //      echo "Error: " . $sql . "<br>" . $conn->error. PHP_EOL;
-    //  }
-    //  mysqli_close($conn);
+     if ($con->query($sql) === TRUE) {
+         echo "New record created successfully". PHP_EOL;
+     } else {
+         echo "Error: " . $sql . "<br>" . $con->error. PHP_EOL;
+     }
+     mysqli_close($con);
 
     echo 'consumed data: ' . $name . PHP_EOL;
  
