@@ -1,10 +1,7 @@
 <?php
 require dirname(__DIR__) . '/vendor/autoload.php';
-include_once '../dashboard/pages/conn/conn.php';
 
 use PhpAmqpLib\Connection\AMQPStreamConnection;
-
-
 
 $host = 'mosquito.rmq.cloudamqp.com';
 $port = 5672;
@@ -23,44 +20,54 @@ $channel->queue_declare($queue, false, true, false, false);
 $channel->exchange_declare($exchange, 'direct', false, true, false);
 $channel->queue_bind($queue, $exchange);
 
-
 //process the message from MQ
 function process_message($message)
 {
- 
-     $messageBody = json_decode($message->body);
-     $name = $messageBody->name;
-     $email = $messageBody->email;
-     $city = $messageBody->city;
-     $website = $messageBody->website;
-     $avatar = $messageBody->avatar;
- 
-     $sql = "INSERT INTO employee (name,email,city,website,avatar)
-     VALUES ('$name','$email','$city','$website','$avatar')";
- 
- 
-     if ($con->query($sql) === TRUE) {
-         echo "New record created successfully". PHP_EOL;
-     } else {
-         echo "Error: " . $sql . "<br>" . $con->error. PHP_EOL;
-     }
-     mysqli_close($con);
 
-    echo 'consumed data: ' . $name . PHP_EOL;
- 
-     if ($message->body === 'quit') {
-         $ $message->delivery_info['channel']->basic_cancel($message->delivery_info['consumer_tag']);
-     }
-    
+    $servername = 'localhost';
+    $username = 'root';
+    $password = '';
+    $dbname = 'enterprisemq';
+
+// Create connection
+    $con = new mysqli($servername, $username, $password, $dbname);
+// Check connection
+    if ($con->connect_error) {
+        die("Connection failed: " . $con->connect_error);
+    }
+
+    $messageBody = json_decode($message->body);
+    $name = $messageBody->name;
+    $email = $messageBody->email;
+    $city = $messageBody->city;
+    $website = $messageBody->website;
+    $avatar = $messageBody->avatar;
+
+    $sql = "INSERT INTO employee (name,email,city,website,avatar)
+     VALUES ('$name','$email','$city','$website','$avatar')";
+
+    if ($con->query($sql) === true) {
+        echo "New record created successfully" . PHP_EOL;
+    } else {
+        echo "Error: " . $sql . "<br>" . $con->error . PHP_EOL;
+    }
+    mysqli_close($con);
+
+    // echo 'consumed data: ' . $name . PHP_EOL;
+
+    if ($message->body === 'quit') {
+        $$message->delivery_info['channel']->basic_cancel($message->delivery_info['consumer_tag']);
+    }
+
 }
 /*
-    queue: Queue from where to get the messages
-    consumer_tag: Consumer identifier
-    no_local: Don't receive messages published by this consumer.
-    no_ack: Tells the server if the consumer will acknowledge the messages.
-    exclusive: Request exclusive consumer access, meaning only this consumer can access the queue
-    nowait:
-    callback: A PHP Callback
+queue: Queue from where to get the messages
+consumer_tag: Consumer identifier
+no_local: Don't receive messages published by this consumer.
+no_ack: Tells the server if the consumer will acknowledge the messages.
+exclusive: Request exclusive consumer access, meaning only this consumer can access the queue
+nowait:
+callback: A PHP Callback
  */
 
 $consumerTag = 'enterprise_consumer';
