@@ -13,19 +13,23 @@ include_once 'conn/conn.php';
     <meta name="author" content="">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/favicon.png">
-    <title>Monster Admin Template - The Most Complete & Trusted Bootstrap 4 Admin Template</title>
+    <title>UPU Enterprise</title>
     <!-- Bootstrap Core CSS -->
     <link href="../assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="css/style.css" rel="stylesheet">
     <!-- You can change the theme colors from here -->
     <link href="css/colors/blue.css" id="theme" rel="stylesheet">
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 <![endif]-->
+    <script src="../assets/plugins/jquery/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
 </head>
 
 <body class="fix-header fix-sidebar card-no-border">
@@ -54,14 +58,14 @@ include_once 'conn/conn.php';
                         <b>
                             <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
                             <!-- Dark Logo icon -->
-                            <img src="../assets/images/logo-icon.png" alt="homepage" class="dark-logo" />
+                            <!-- <img src="../assets/images/logo-icon.png" alt="homepage" class="dark-logo" /> -->
                             
                         </b>
                         <!--End Logo icon -->
                         <!-- Logo text -->
                         <span>
                             <!-- dark Logo text -->
-                            <img src="../assets/images/logo-text.png" alt="homepage" class="dark-logo" />
+                            <img src="../assets/images/logo-text.png" alt="homepage" style="width:98%" class="dark-logo" />
                         </span>
                     </a>
                 </div>
@@ -80,11 +84,11 @@ include_once 'conn/conn.php';
                     <!-- ============================================================== -->
                     <!-- User profile and search -->
                     <!-- ============================================================== -->
-                    <ul class="navbar-nav my-lg-0">
+                    <!-- <ul class="navbar-nav my-lg-0">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="../assets/images/users/1.jpg" alt="user" class="profile-pic m-r-5" />Markarn Doe</a>
                         </li>
-                    </ul>
+                    </ul> -->
                 </div>
             </nav>
         </header>
@@ -103,12 +107,12 @@ include_once 'conn/conn.php';
                         <li>
                             <a href="index.php" class="waves-effect"><i class="fa fa-clock-o m-r-10" aria-hidden="true"></i>Dashboard</a>
                         </li>
-                        <li>
+                        <!-- <li>
                             <a href="pages-profile.html" class="waves-effect"><i class="fa fa-user m-r-10" aria-hidden="true"></i>Profile</a>
                         </li>
                         <li>
                             <a href="table-basic.html" class="waves-effect"><i class="fa fa-table m-r-10" aria-hidden="true"></i>Employee List</a>
-                        </li>
+                        </li> -->
                     </ul>
                 </nav>
                 <!-- End Sidebar navigation -->
@@ -130,14 +134,16 @@ include_once 'conn/conn.php';
                 <!-- Bread crumb and right sidebar toggle -->
                 <!-- ============================================================== -->
                 <div class="row page-titles">
-                    <div class="col-md-6 col-8 align-self-center">
+                    <div class="col-md-10 col-10 align-self-center">
                         <h3 class="text-themecolor m-b-0 m-t-0">Dashboard</h3>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
                             <li class="breadcrumb-item active">Dashboard</li>
                         </ol>
                     </div>
-
+                    <div class="col-md-2 col-2">
+                       <button type="button" class="btn btn-info btn-lg">Send all to UPM</button>   
+                    </div>
                 </div>
                 <!-- ============================================================== -->
                 <!-- End Bread crumb and right sidebar toggle -->
@@ -190,38 +196,44 @@ include_once 'conn/conn.php';
                         <div class="card">
                             <div class="card-block">
 
-                                <h4 class="card-title">List of employees</h4>
-                                <div class="table-responsive m-t-40">
-                                    <table class="table stylish-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Avatar</th>
-                                                <th>Name</th>
-                                                <th>Email</th>
-                                                <th>City</th>
-                                                <th>Website</th>
-                                            </tr>
-                                        </thead>
+                                <h4 class="card-title">List of Students Application</h4>
 
-                                        <?php 
-                                        $result=mysqli_query($con,"SELECT * FROM employee");
-                                        
-                                                
-                                        while ($employees=mysqli_fetch_array($result)) {
-                                            echo "<tbody>";
-                                            echo "<tr>";
-                                            echo "<td><span class='round'><img src='" . $employees['avatar'] . "alt='user' width='50' </td>";
-                                            echo "<td>" . $employees['name'] . "</td>";
-                                            echo "<td>" . $employees['email'] . "</td>";
-                                            echo "<td>" . $employees['city'] . "</td>";
-                                            echo "<td>" . $employees['website'] . "</td>";
-                                           
-                                              
-                                            } 
-                                            echo "</tr>";
-                                        echo "</tbody>";
-                                    echo "</table>";
+
+
+                                <div class="table-responsive m-t-40">
+                                    
+                                <table id="table_id"  class="table stylish-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Avatar</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>City</th>
+                                            <th>Website</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php 
+                                    $result = mysqli_query($con, "SELECT * FROM employee");
+
+
+                                    while ($employees = mysqli_fetch_array($result)) {
+                                        echo "<tr>";
+                                        echo "<td><span class='round'><img src='" . $employees['avatar'] . "alt='user' width='50' </td>";
+                                        echo "<td>" . $employees['name'] . "</td>";
+                                        echo "<td>" . $employees['email'] . "</td>";
+                                        echo "<td>" . $employees['city'] . "</td>";
+                                        echo "<td>" . $employees['website'] . "</td>";
+
+
+                                    }
+                                    echo "</tr>";
                                     ?>
+                                   </tbody>
+                                   </table>
+                                  
+
+                                       
                                 </div>
                             </div>
                         </div>
@@ -256,7 +268,6 @@ include_once 'conn/conn.php';
     <!-- ============================================================== -->
     <!-- All Jquery -->
     <!-- ============================================================== -->
-    <script src="../assets/plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap tether Core JavaScript -->
     <script src="../assets/plugins/bootstrap/js/tether.min.js"></script>
     <script src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
@@ -281,6 +292,14 @@ include_once 'conn/conn.php';
     <!-- Style switcher -->
     <!-- ============================================================== -->
     <script src="../assets/plugins/styleswitcher/jQuery.style.switcher.js"></script>
+    <script>
+    $(document).ready( function () {
+        $('#table_id').DataTable( {
+            "pagingType": "full_numbers"
+        } );
+        
+    } );
+    </script>
 </body>
 
 </html>

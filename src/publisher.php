@@ -43,7 +43,7 @@ $faker = Faker\Factory::create();
 
 
 //set how many record want 
-$limit = 100;
+$limit = 1000;
 $itteration = 0;
 
 while ($itteration < $limit) {

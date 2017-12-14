@@ -27,17 +27,17 @@ $channel->queue_bind($queue, $exchange);
 function process_message($message)
 {
      //db conn
-     $servername = "localhost";
-     $username = "root";
-     $password = "";
-     $dbname = "enterprisemq";
+    //  $servername = "localhost";
+    //  $username = "root";
+    //  $password = "";
+    //  $dbname = "enterprisemq";
  
      // Create connection
-     $conn = new mysqli($servername, $username, $password, $dbname);
+    //  $conn = new mysqli($servername, $username, $password, $dbname);
      // Check connection
-     if ($conn->connect_error) {
-         die("Connection failed: " . $conn->connect_error);
-     }
+    //  if ($conn->connect_error) {
+    //      die("Connection failed: " . $conn->connect_error);
+    //  }
      //db end
  
      $messageBody = json_decode($message->body);
@@ -48,16 +48,18 @@ function process_message($message)
      $website = $messageBody->website;
      $avatar = $messageBody->avatar;
  
-     $sql = "INSERT INTO employee (name,email,city,website,avatar)
-     VALUES ('$name','$email','$city','$website','$avatar')";
+    //  $sql = "INSERT INTO employee (name,email,city,website,avatar)
+    //  VALUES ('$name','$email','$city','$website','$avatar')";
  
  
-     if ($conn->query($sql) === TRUE) {
-         echo "New record created successfully". PHP_EOL;
-     } else {
-         echo "Error: " . $sql . "<br>" . $conn->error. PHP_EOL;
-     }
-     mysqli_close($conn);
+    //  if ($conn->query($sql) === TRUE) {
+    //      echo "New record created successfully". PHP_EOL;
+    //  } else {
+    //      echo "Error: " . $sql . "<br>" . $conn->error. PHP_EOL;
+    //  }
+    //  mysqli_close($conn);
+
+    echo 'consumed data: ' . $name . PHP_EOL;
  
      if ($message->body === 'quit') {
          $ $message->delivery_info['channel']->basic_cancel($message->delivery_info['consumer_tag']);
