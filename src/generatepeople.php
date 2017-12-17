@@ -6,17 +6,23 @@ include_once '../dashboard/pages/conn/conn.php';
 $faker = Faker\Factory::create();
 
 //set how many record want
-$limit = 20;
+$limit = 1000;
 $itteration = 0;
-
+//ic, name, phone, address, result
 while ($itteration < $limit) {
+    // $name = $faker->lastname;
+    // $email = $faker->email;
+    // $city = $faker->city;
+    // $website = $faker->domainName;
+    // $avatar = $faker->imageUrl($width = 50, $height = 50, 'people');
+    $ic = $faker->isbn13;
     $name = $faker->lastname;
-    $email = $faker->email;
-    $city = $faker->city;
-    $website = $faker->domainName;
-    $avatar = $faker->imageUrl($width = 50, $height = 50, 'people');
+    $phone = $faker->e164PhoneNumber;
+    $address = $faker->address;
+    $result = (1 + mt_rand() / mt_getrandmax() * (4 - 1));
 
-    $sql = "INSERT INTO employee (name,email,city,website,avatar) VALUES ('$name','$email','$city','$website','$avatar')";
+    // $sql = "INSERT INTO employee (name,email,city,website,avatar) VALUES ('$name','$email','$city','$website','$avatar')";
+    $sql = "INSERT INTO students (ic,name,phone,address,result) VALUES ('$ic','$name','$phone','$address','$result')";
 
     if ($con->query($sql) === true) {
         echo "New record created successfully" . PHP_EOL;
