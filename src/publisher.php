@@ -11,7 +11,7 @@ $user = 'bcoocfcv';
 $pass = '4s4ROw5Zeqy_QhtNKQ5uXtDz2SVj3DBG';
 $vhost = 'bcoocfcv';
 
-$exchange = 'subscriber'; //exchage name
+$exchange = 'publisher-exchange'; //exchage name
 //this is the exchange types that we can use
 // amq.direct
 // amq.fanout	
@@ -59,11 +59,6 @@ if ($result->num_rows > 0) {
     // output data of each row
     while ($row = $result->fetch_assoc()) {
         $messageBody = json_encode([
-            // 'name' => $row["name"],
-            // 'email' => $row["email"],
-            // 'city' => $row["city"],
-            // 'website' => $row["website"],
-            // 'avatar' => $row["avatar"],
             'ic' => $row["ic"],
             'name' => $row["name"],
             'phone' => $row["phone"],
@@ -72,11 +67,13 @@ if ($result->num_rows > 0) {
         ]);
         $message = new AMQPMessage($messageBody, [
             'content_type' => 'application/json',
-            'delivery_mode' => AMQPMessage::DELIVERY_MODE_NON_PERSISTENT,
+            'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT,
         ]);
         $channel->basic_publish($message, $exchange);
+
+        //just displaya
         $body = json_decode($messageBody);
-        echo 'Publishing message to queue: ' . $body->name . PHP_EOL;
+        echo $messageBody;
 
     }
 } else {
@@ -84,34 +81,7 @@ if ($result->num_rows > 0) {
 }
 $con->close();
 
-//set how many record want
-// $limit = 1000;
-// $itteration = 0;
-
-// while ($itteration < $limit) {
-
-//     // $name = $faker->name;
-
-//     $messageBody = json_encode([
-//         'name' => $faker->lastname,
-//         'email' => $faker->email,
-//         'city' => $faker->city,
-//         'website' => $faker->domainName,
-//         'avatar' => $faker->imageUrl($width = 50, $height = 50, 'people')
-//     ]);
-
-// $message = new AMQPMessage($messageBody,[
-//     'content_type' => 'application/json',
-//     'delivery_mode' => AMQPMessage::DELIVERY_MODE_NON_PERSISTENT
-// ]);
-// $channel->basic_publish($message, $exchange);
-// $body = json_decode($messageBody);
-// echo 'Publishing message to queue: ' . $body->name . PHP_EOL;
-
-// $itteration++;
-// }
-
-echo 'Finished publishing to queue: ' . $queue . PHP_EOL;
+// echo 'Finished publishing to queue: ' . $queue . PHP_EOL;
 
 $channel->close();
 $connection->close();

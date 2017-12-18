@@ -30,6 +30,8 @@ include_once 'conn/conn.php';
     <script src="../assets/plugins/jquery/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+    <script src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="bower_components/bootstrap-waitingfor/build/bootstrap-waitingfor.js"></script>
 </head>
 
 <body class="fix-header fix-sidebar card-no-border">
@@ -142,7 +144,7 @@ include_once 'conn/conn.php';
                         </ol>
                     </div>
                     <div class="col-md-2 col-2">
-                       <button type="button" class="btn btn-info btn-lg">Send all to UPM</button>   
+                       <button type="button" id="senddata" class="btn btn-info btn-lg">Send all to UPM</button>   
                     </div>
                 </div>
                 <!-- ============================================================== -->
@@ -210,20 +212,22 @@ include_once 'conn/conn.php';
                                             <th>Email</th>
                                             <th>City</th>
                                             <th>Website</th>
+                                            <th>Website</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                     <?php 
-                                    $result = mysqli_query($con, "SELECT * FROM employee");
+                                    $result = mysqli_query($con, "SELECT * FROM students");
 
 
-                                    while ($employees = mysqli_fetch_array($result)) {
+                                    while ($students = mysqli_fetch_array($result)) {
                                         echo "<tr>";
-                                        echo "<td><span class='round'><img src='" . $employees['avatar'] . "alt='user' width='50' </td>";
-                                        echo "<td>" . $employees['name'] . "</td>";
-                                        echo "<td>" . $employees['email'] . "</td>";
-                                        echo "<td>" . $employees['city'] . "</td>";
-                                        echo "<td>" . $employees['website'] . "</td>";
+                                        echo "<td>" . $students['id'] . "</td>";
+                                        echo "<td>" . $students['ic'] . "</td>";
+                                        echo "<td>" . $students['name'] . "</td>";
+                                        echo "<td>" . $students['phone'] . "</td>";
+                                        echo "<td>" . $students['address'] . "</td>";
+                                        echo "<td>" . $students['result'] . "</td>";
 
 
                                     }
@@ -240,6 +244,9 @@ include_once 'conn/conn.php';
                     </div>
                 </div>
                 <!-- Row -->
+                <div class="row" id="data">
+
+                </div>
 
                 <!-- ============================================================== -->
                 <!-- End PAge Content -->
@@ -269,8 +276,28 @@ include_once 'conn/conn.php';
     <!-- All Jquery -->
     <!-- ============================================================== -->
     <!-- Bootstrap tether Core JavaScript -->
+    <script>
+    $('#senddata').click(function(){
+        waitingDialog.show('Loading Something...');
+            $.ajax({
+            method: 'get',
+            url: '../../src/publisher.php',
+            success: function(data) {
+                waitingDialog.hide();
+                $("#data").append(data);
+            }
+            });
+    });
+    </script>
+       <script>
+    $(document).ready( function () {
+        $('#table_id').DataTable( {
+            "pagingType": "full_numbers"
+        } );
+        
+    } );
+    </script>
     <script src="../assets/plugins/bootstrap/js/tether.min.js"></script>
-    <script src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
     <!-- slimscrollbar scrollbar JavaScript -->
     <script src="js/jquery.slimscroll.js"></script>
     <!--Wave Effects -->
@@ -292,14 +319,7 @@ include_once 'conn/conn.php';
     <!-- Style switcher -->
     <!-- ============================================================== -->
     <script src="../assets/plugins/styleswitcher/jQuery.style.switcher.js"></script>
-    <script>
-    $(document).ready( function () {
-        $('#table_id').DataTable( {
-            "pagingType": "full_numbers"
-        } );
-        
-    } );
-    </script>
+ 
 </body>
 
 </html>
