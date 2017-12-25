@@ -10,7 +10,16 @@ $pass = '4s4ROw5Zeqy_QhtNKQ5uXtDz2SVj3DBG';
 $vhost = 'bcoocfcv';
 
 $exchange = 'subscriber';
-$queue = 'upm-applicant';
+$queue = 'upm-result';
+
+// $host = 'spider.rmq.cloudamqp.com';
+// $port = 5672;
+// $user = 'ydjtkfhg';
+// $pass = 'SnRM9CiwuIasm1rIDD72gaqsFtsNa5zI';
+// $vhost = 'ydjtkfhg';
+// $exchange = 'subsriber';
+// $queue = 'upm-result';
+
 
 $connection = new AMQPStreamConnection($host, $port, $user, $pass, $vhost);
 $channel = $connection->channel();
@@ -22,7 +31,7 @@ $channel->queue_declare($queue, false, true, false, false);
 
 
 
-//process the message from MQ
+// //process the message from MQ
 function process_message($message)
 {
 
@@ -37,36 +46,57 @@ function process_message($message)
     if ($con->connect_error) {
         die("Connection failed: " . $con->connect_error);
     }
-    // echo $message->body;
-    $messages = json_decode($message->body);
-    // foreach ($messages as $messageBody) {
-
-        $ic = $messages->ic;
-        $name = $messages->name;
-        $phone = $messages->phone;
-        $address = str_replace(",", " ", (str_replace("\n", " ", $messages->address)));
-        $result = $messages->result;
-        // $status = $messageBody->status;
-
-       $sql = "INSERT INTO studentsuccess (ic,name,phone,address,result)
-    VALUES ('$ic','$name','$phone','$address','$result')";
-
-if ($con->query($sql) === true) {
-    echo "New record created successfully" . PHP_EOL;
-} else {
-    echo "Error: " . $sql . "<br>" . $con->error . PHP_EOL;
-}
 
 
-        // echo 'consumed data: ' . $messageBody . PHP_EOL;
+    $array =  $message->body;
+    $messages = json_decode($array);
+    $i = 0;
+    foreach ($messages as $message) {
+ 
+    
+        $ic = $message->ic;
+        $name = $message->name;
+        $phone = $message->phone;
+        $address = str_replace(",", " ", (str_replace("\n", " ", $message->address)));
+        $result = $message->result;
+        $status = $message->status;
 
-    // }
+        if ( $status=='succeed') {
+            $sql = "INSERT INTO studentsuccess (ic,name,phone,address,result,status)
+                VALUES ('$ic','$name','$phone','$address','$result','$status')";
+
+
+            if ($con->query($sql) === true) {
+                echo $i++." - New success record created successfully" . PHP_EOL;
+            } else {
+                echo "Error: " . $sql . "<br>" . $con->error . PHP_EOL;
+            }
+
+        } else {
+            $sql = "INSERT INTO studentfailed (ic,name,phone,address,result,status)
+                VALUES ('$ic','$name','$phone','$address','$result','$status')";
+
+
+            if ($con->query($sql) === true) {
+                echo $i++." - New failed record created successfully" . PHP_EOL;
+            } else {
+                echo "Error: " . $sql . "<br>" . $con->error . PHP_EOL;
+            }
+        }
+        
+      
+
    
-    mysqli_close($con);
 
-    // if ($message->body === 'quit') {
-    //     $$message->delivery_info['channel']->basic_cancel($message->delivery_info['consumer_tag']);
-    // }
+    if ($message === 'quit') {
+        $$message->delivery_info['channel']->basic_cancel($message->delivery_info['consumer_tag']);
+    }
+
+
+    }
+ 
+
+    mysqli_close($con);
 
 }
 /*
@@ -78,14 +108,14 @@ exclusive: Request exclusive consumer access, meaning only this consumer can acc
 nowait:
 callback: A PHP Callback
  */
-$callback = function ($msg) {
-    echo " [x] Received ", $msg->body, "\n";
-    process_message($msg);
-};
+// $callback = function ($msg) {
+//     // echo " [x] Received ", $msg->body, "\n";
+//     process_message($msg);
+// };
 
 
 // $consumerTag = 'enterprise_consumer';
-$channel->basic_consume($queue, '', false, true, false, false, $callback);
+$channel->basic_consume($queue, '', false, true, false, false, 'process_message');
 // Loop as long as the channel has callbacks registered
 while (count($channel->callbacks)) {
     $channel->wait();

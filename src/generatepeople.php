@@ -15,7 +15,7 @@ while ($itteration < $limit) {
     // $city = $faker->city;
     // $website = $faker->domainName;
     // $avatar = $faker->imageUrl($width = 50, $height = 50, 'people');
-    $ic = $faker->isbn13;
+    $ic = $faker->ean8;
     $name = $faker->lastname;
     $phone = $faker->e164PhoneNumber;
     $address = $faker->address;

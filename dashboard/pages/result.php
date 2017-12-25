@@ -10,6 +10,11 @@ $studentsuccessrows = mysqli_fetch_array($studentsuccess);
 $studentfailed = mysqli_query($con, "SELECT count('id') FROM studentfailed");
 $studentfailedrows = mysqli_fetch_array($studentfailed);
 
+
+
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -71,7 +76,7 @@ $studentfailedrows = mysqli_fetch_array($studentfailed);
                             <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
                             <!-- Dark Logo icon -->
                             <!-- <img src="../assets/images/logo-icon.png" alt="homepage" class="dark-logo" /> -->
-
+                            
                         </b>
                         <!--End Logo icon -->
                         <!-- Logo text -->
@@ -153,7 +158,7 @@ $studentfailedrows = mysqli_fetch_array($studentfailed);
                             <li class="breadcrumb-item active">Dashboard</li>
                         </ol>
                     </div>
-
+                  
                 </div>
                 <!-- ============================================================== -->
                 <!-- End Bread crumb and right sidebar toggle -->
@@ -186,7 +191,7 @@ $studentfailedrows = mysqli_fetch_array($studentfailed);
                             <div class="card-block">
                                 <h4 class="card-title">Number of Approved Applicant</h4>
                                 <div class="text-right">
-                                    <h2 class="font-light m-b-0"><i class="ti-arrow-up text-info"></i><?php echo "$studentsuccessrows[0]"; ?></h2>
+                                    <h2 class="font-light m-b-0"><i class="ti-arrow-up text-info"></i><?php echo "$studentsuccessrows[0]";?></h2>
                                     <!-- <span class="text-muted">Todays Income</span> -->
                                 </div>
                                 <!-- <span class="text-info">30%</span>
@@ -203,7 +208,7 @@ $studentfailedrows = mysqli_fetch_array($studentfailed);
                             <div class="card-block">
                                 <h4 class="card-title">Number of Rejected Applicant</h4>
                                 <div class="text-right">
-                                    <h2 class="font-light m-b-0"><i class="ti-arrow-up text-info"></i> <?php echo "$studentfailedrows[0]"; ?>
+                                    <h2 class="font-light m-b-0"><i class="ti-arrow-up text-info"></i> <?php echo "$studentfailedrows[0]";?>
 </h2>
                                     <!-- <span class="text-muted">Todays Income</span> -->
                                 </div>
@@ -225,48 +230,109 @@ $studentfailedrows = mysqli_fetch_array($studentfailed);
                             <div class="card-block">
                             <div class="row">
                             <div class="col-md-6">
-                                <h4 class="card-title">List of Students Application</h4>
+                                <h4 class="card-title">List of Approved Students Application</h4>
                             </div>
 
                                 <div class="col-md-6">
-                                    <button type="button" id="senddata" class="btn btn-info btn-lg pull-right">Send all to UPM</button>
+                                    <button type="button" id="getdata" class="btn btn-info btn-lg pull-right">Get Data From UPM</button>  
                                 </div>
 </div>
 
                                 <div class="table-responsive m-t-40">
-
-                                <table id="table_id"  class="table stylish-table">
+                                    
+                                <table id="table_approved"  class="table stylish-table">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
                                             <th>IC</th>
                                             <th>Name</th>
                                             <th>Phone</th>
                                             <th>Address</th>
                                             <th>Result</th>
+                                            <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <?php
-$result = mysqli_query($con, "SELECT * FROM students");
+                                    <?php 
+                                    $result = mysqli_query($con, "SELECT * FROM studentsuccess");
 
-while ($students = mysqli_fetch_array($result)) {
-    echo "<tr>";
-    echo "<td>" . $students['id'] . "</td>";
-    echo "<td>" . $students['ic'] . "</td>";
-    echo "<td>" . $students['name'] . "</td>";
-    echo "<td>" . $students['phone'] . "</td>";
-    echo "<td>" . $students['address'] . "</td>";
-    echo "<td>" . $students['result'] . "</td>";
 
-}
-echo "</tr>";
-?>
+                                    while ($students = mysqli_fetch_array($result)) {
+                                        echo "<tr>";
+                                        echo "<td>" . $students['ic'] . "</td>";
+                                        echo "<td>" . $students['name'] . "</td>";
+                                        echo "<td>" . $students['phone'] . "</td>";
+                                        echo "<td>" . $students['address'] . "</td>";
+                                        echo "<td>" . $students['result'] . "</td>";
+                                        echo "<td>" . $students['status'] . "</td>";
+
+
+                                    }
+                                    echo "</tr>";
+                                    ?>
                                    </tbody>
                                    </table>
+                                  
+
+                                       
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Row -->
 
 
+                <!-- failed -->
+                 <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-block">
+                            <div class="row">
+                            <div class="col-md-6">
+                                <h4 class="card-title">List of Rejected Students Application</h4>
+                            </div>
 
+                                <!-- <div class="col-md-6">
+                                    <button type="button" id="senddata" class="btn btn-info btn-lg pull-right">Send all to UPM</button>  
+                                </div> -->
+</div>
+
+                                <div class="table-responsive m-t-40">
+                                    
+                                <table id="table_rejected"  class="table stylish-table">
+                                    <thead>
+                                        <tr>
+                                             <th>IC</th>
+                                            <th>Name</th>
+                                            <th>Phone</th>
+                                            <th>Address</th>
+                                            <th>Result</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php 
+                                    $result = mysqli_query($con, "SELECT * FROM studentfailed");
+
+
+                                    while ($students = mysqli_fetch_array($result)) {
+                                        echo "<tr>";
+                                       echo "<td>" . $students['ic'] . "</td>";
+                                        echo "<td>" . $students['name'] . "</td>";
+                                        echo "<td>" . $students['phone'] . "</td>";
+                                        echo "<td>" . $students['address'] . "</td>";
+                                        echo "<td>" . $students['result'] . "</td>";
+                                        echo "<td>" . $students['status'] . "</td>";
+
+
+                                    }
+                                    echo "</tr>";
+                                    ?>
+                                   </tbody>
+                                   </table>
+                                  
+
+                                       
                                 </div>
                             </div>
                         </div>
@@ -306,11 +372,11 @@ echo "</tr>";
     <!-- ============================================================== -->
     <!-- Bootstrap tether Core JavaScript -->
     <script>
-    $('#senddata').click(function(){
-        waitingDialog.show('Loading Something...');
+    $('#getdata').click(function(){
+        waitingDialog.show('Fetching Data...');
             $.ajax({
             method: 'get',
-            url: '../../src/publisher.php',
+            url: '../../src/consumer.php',
             success: function(data) {
                 waitingDialog.hide();
                 $("#data").append(data);
@@ -320,10 +386,14 @@ echo "</tr>";
     </script>
        <script>
     $(document).ready( function () {
-        $('#table_id').DataTable( {
+        $('#table_approved').DataTable( {
             "pagingType": "full_numbers"
         } );
 
+          $('#table_rejected').DataTable( {
+            "pagingType": "full_numbers"
+        } );
+        
     } );
     </script>
     <script src="../assets/plugins/bootstrap/js/tether.min.js"></script>
@@ -348,7 +418,7 @@ echo "</tr>";
     <!-- Style switcher -->
     <!-- ============================================================== -->
     <script src="../assets/plugins/styleswitcher/jQuery.style.switcher.js"></script>
-
+ 
 </body>
 
 </html>
